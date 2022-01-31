@@ -28,9 +28,13 @@ public class Conexao implements AutoCloseable{
     }
 
     public static Connection getConexao() throws SQLException {
-        return connection == null || connection.isClosed()
+        return checkConnection()
                 ? novaConexao()
                 : connection;
+    }
+
+    private static boolean checkConnection() throws SQLException {
+        return connection == null || connection.isClosed();
     }
 
     @Override

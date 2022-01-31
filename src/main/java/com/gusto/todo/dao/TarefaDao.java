@@ -47,6 +47,7 @@ public class TarefaDao implements DAO<Tarefa> {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+
         return tarefas;
     }
 

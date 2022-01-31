@@ -61,16 +61,18 @@ public class TarefaView extends JFrame {
         JButton btnExcluirTarefa = new JButton("Excluir Tarefa");
 
         EmptyBorder emptyBorder = new EmptyBorder(5, 5, 5, 5);
-        BorderLayout borderLayout = new BorderLayout(0, 0);
+        BorderLayout borderLayoutContentPane = new BorderLayout(0, 0);
+        BorderLayout borderLayoutPanelNovatarefa = new BorderLayout(0, 0);
+        BorderLayout borderLayoutTodasTarefas = new BorderLayout(0, 0);
         Dimension dimension = new Dimension(500, 300);
         FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER, 5, 5);
 
         contentPane.setBorder(emptyBorder);
-        contentPane.setLayout(borderLayout);
+        contentPane.setLayout(borderLayoutContentPane);
         setContentPane(contentPane);
 
         contentPane.add(panelNovatarefa, BorderLayout.NORTH);
-        panelNovatarefa.setLayout(borderLayout);
+        panelNovatarefa.setLayout(borderLayoutPanelNovatarefa);
         panelNovatarefa.add(lblNovaTarefa, BorderLayout.WEST);
         textFieldNovaTarefa.addKeyListener(getKeyListener(textFieldNovaTarefa, tableModel));
         panelNovatarefa.add(textFieldNovaTarefa, BorderLayout.CENTER);
@@ -79,7 +81,7 @@ public class TarefaView extends JFrame {
         panelNovatarefa.add(btnAdicionar, BorderLayout.EAST);
 
         contentPane.add(panelTodasTarefas, BorderLayout.CENTER);
-        panelTodasTarefas.setLayout(borderLayout);
+        panelTodasTarefas.setLayout(borderLayoutTodasTarefas);
         panelTodasTarefas.add(scrollPane, BorderLayout.CENTER);
         tableTarefas.setFillsViewportHeight(true);
         tableTarefas.addMouseListener(getMouseClickedEvent(tableTarefas, btnRenomearTarefa, btnAlterarTarefa, btnExcluirTarefa));
