@@ -12,10 +12,10 @@ public class TarefaTableModel extends AbstractTableModel {
 	private static final int TAREFA = 0;
 	private static final int CONCLUIDO = 1;
 	private static final String ERRO_COLUNA_INVALIDA = "Coluna Inválida!!!";
+
 	private final String[] colunas = {"Tarefa", "Concluído" };
 
-
-	private final List<Tarefa> dados;
+	private final transient List<Tarefa> dados;
 
 	public TarefaTableModel(List<Tarefa> dados) {
 		this.dados = dados;
@@ -32,20 +32,20 @@ public class TarefaTableModel extends AbstractTableModel {
 	}
 
 	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		switch (columnIndex) {
+	public Object getValueAt(int linha, int coluna) {
+		switch (coluna) {
 		case TAREFA:
-			return dados.get(rowIndex).getTitulo();
+			return dados.get(linha).getTitulo();
 		case CONCLUIDO:
-			return dados.get(rowIndex).isConcluido();
+			return dados.get(linha).isConcluido();
 		default:
 			throw new IndexOutOfBoundsException(ERRO_COLUNA_INVALIDA);
 		}
 	}
 
 	@Override
-	public Class<?> getColumnClass(int columnIndex) {
-		switch (columnIndex) {
+	public Class<?> getColumnClass(int coluna) {
+		switch (coluna) {
 		case TAREFA:
 			return String.class;
 		case CONCLUIDO:
@@ -56,37 +56,41 @@ public class TarefaTableModel extends AbstractTableModel {
 	}
 
 	@Override
-	public String getColumnName(int column) {
-		return colunas[column];
+	public String getColumnName(int coluna) {
+		return colunas[coluna];
 	}
 
 	@Override
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
+	public boolean isCellEditable(int linha, int coluna) {
 		return false;
 	}
 
 	@Override
-	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		Tarefa tarefa = dados.get(rowIndex);
-		switch (columnIndex) {
+	public void setValueAt(Object valor, int linha, int coluna) {
+		Tarefa tarefa = dados.get(linha);
+
+		switch (coluna) {
 		case TAREFA:
-			tarefa.setTitulo((String) aValue);
+			String titulo = (String) valor;
+			tarefa.setTitulo(titulo);
 			break;
 		case CONCLUIDO:
-			tarefa.setConcluido((boolean) aValue);
+			boolean concluido = (boolean) valor;
+			tarefa.setConcluido(concluido);
 			break;
 		default:
 			throw new IndexOutOfBoundsException(ERRO_COLUNA_INVALIDA);
 		}
-		fireTableCellUpdated(rowIndex, columnIndex);
+
+		fireTableCellUpdated(linha, coluna);
 	}
 
-	public Tarefa getValue(int rowIndex) {
-		return dados.get(rowIndex);
+	public Tarefa getValue(int linha) {
+		return dados.get(linha);
 	}
 
-	public int indexOf(Tarefa empregado) {
-		return dados.indexOf(empregado);
+	public int indexOf(Tarefa tarefa) {
+		return dados.indexOf(tarefa);
 	}
 
 	public void onAdd(Tarefa tarefa) {
@@ -94,13 +98,14 @@ public class TarefaTableModel extends AbstractTableModel {
 		fireTableRowsInserted(indexOf(tarefa), indexOf(tarefa));
 	}
 
-	public void onRemove(int rowIndex) {
-		dados.remove(rowIndex);
-		fireTableRowsDeleted(rowIndex, rowIndex);
+	public void onRemove(int linha) {
+		dados.remove(linha);
+		fireTableRowsDeleted(linha, linha);
 	}
 
 	public void onUpdate(Tarefa tarefa) {
 		dados.add(tarefa);
 		fireTableRowsUpdated(indexOf(tarefa), indexOf(tarefa));
 	}
+
 }

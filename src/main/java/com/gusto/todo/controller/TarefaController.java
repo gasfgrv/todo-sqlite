@@ -1,7 +1,6 @@
 package com.gusto.todo.controller;
 
 import com.gusto.todo.dao.DAO;
-import com.gusto.todo.dao.TarefaDao;
 import com.gusto.todo.exception.ControllerException;
 import com.gusto.todo.exception.DaoException;
 import com.gusto.todo.model.Tarefa;
@@ -9,61 +8,52 @@ import com.gusto.todo.model.Tarefa;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TarefaController {
+public class TarefaController implements Controller<Tarefa, Integer> {
 
-    DAO<Tarefa> dao = new TarefaDao();
-    List<Tarefa> tarefas = new ArrayList<>();
+    private final DAO<Tarefa> dao;
 
-    public void inserirTarefa(Tarefa t) throws ControllerException {
+    public TarefaController(DAO<Tarefa> dao) {
+        this.dao = dao;
+    }
+
+    @Override
+    public void inserir(Tarefa tarefa) throws ControllerException {
         try {
-            dao.inserir(t);
-            tarefas.clear();
-            tarefas.addAll(dao.listar());
+            dao.inserir(tarefa);
         } catch (DaoException e) {
-            e.printStackTrace();
-            throw new ControllerException();
+            throw new ControllerException(e);
         }
     }
 
-    public void listarTarefas() throws ControllerException {
-        try {
-            tarefas.clear();
-            tarefas.addAll(dao.listar());
-        } catch (DaoException e) {
-            e.printStackTrace();
-            throw new ControllerException();
-        }
-    }
+    @Override
+    public List<Tarefa> listar() throws ControllerException {
+        List<Tarefa> tarefas = new ArrayList<>();
 
-    public void editarTarefa(int id, Tarefa t) throws ControllerException {
-        try {
-            dao.editar(id, t);
-            tarefas.clear();
-            tarefas.addAll(dao.listar());
-        } catch (DaoException e) {
-            e.printStackTrace();
-            throw new ControllerException();
-        }
-    }
-
-    public void removerTarefa(int id) throws ControllerException {
-        try {
-            dao.remover(id);
-            tarefas.clear();
-            tarefas.addAll(dao.listar());
-        } catch (DaoException e) {
-            e.printStackTrace();
-            throw new ControllerException();
-        }
-    }
-
-    public List<Tarefa> getTarefas() {
         try {
             tarefas = dao.listar();
         } catch (DaoException e) {
-            e.printStackTrace();
+            throw new ControllerException(e);
         }
+
         return tarefas;
+    }
+
+    @Override
+    public void editar(Integer id, Tarefa tarefa) throws ControllerException {
+        try {
+            dao.editar(id, tarefa);
+        } catch (DaoException e) {
+            throw new ControllerException(e);
+        }
+    }
+
+    @Override
+    public void remover(Integer id) throws ControllerException {
+        try {
+            dao.remover(id);
+        } catch (DaoException e) {
+            throw new ControllerException(e);
+        }
     }
 
 }

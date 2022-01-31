@@ -1,47 +1,40 @@
 package com.gusto.todo.connection;
 
+import javax.swing.JOptionPane;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import static java.sql.DriverManager.getConnection;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
-import static javax.swing.JOptionPane.showMessageDialog;
 
-public class Conexao {
+public class Conexao implements AutoCloseable{
 
-    private static Conexao conexao;
+    public static final String URL = "jdbc:sqlite::resource:database/tarefas.db";
 
-    private Connection connection;
+    private static Connection connection;
 
-    private Conexao() {
+    private static Connection novaConexao() {
         try {
             Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static Conexao getConexao() {
-        return conexao == null ? new Conexao() : conexao;
-    }
-
-    public Connection conectar() {
-        try {
-            setConnetion();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            showMessageDialog(null,
+            connection = DriverManager.getConnection(URL);
+        } catch (ClassNotFoundException | SQLException e) {
+            JOptionPane.showMessageDialog(null,
                     "Não foi possível conectar ao banco de dados",
                     "Erro",
                     ERROR_MESSAGE);
         }
+
         return connection;
     }
 
-    private void setConnetion() throws SQLException {
-        if (connection == null || connection.isClosed()) {
-            connection = getConnection("jdbc:sqlite::resource:database/tarefas.db");
-        }
+    public static Connection getConexao() throws SQLException {
+        return connection == null || connection.isClosed()
+                ? novaConexao()
+                : connection;
     }
 
+    @Override
+    public void close() throws Exception {
+        connection.close();
+    }
 }

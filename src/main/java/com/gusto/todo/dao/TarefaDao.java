@@ -3,7 +3,7 @@ package com.gusto.todo.dao;
 import com.gusto.todo.connection.Conexao;
 import com.gusto.todo.exception.DaoException;
 import com.gusto.todo.model.Tarefa;
-import com.gusto.todo.model.TarrefaBuilder;
+import com.gusto.todo.model.TarefaBuilder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +17,8 @@ public class TarefaDao implements DAO<Tarefa> {
     @Override
     public void inserir(Tarefa t) throws DaoException {
         String sql = "INSERT INTO tarefa (titulo, concluido) VALUES(?,?)";
-        try (Connection conn = Conexao.getConexao().conectar();
+
+        try (Connection conn = Conexao.getConexao();
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, t.getTitulo());
             preparedStatement.setBoolean(2, false);
@@ -30,13 +31,14 @@ public class TarefaDao implements DAO<Tarefa> {
 
     @Override
     public List<Tarefa> listar() throws DaoException {
-        List<Tarefa> tarefas = new ArrayList<>();
         String sql = "SELECT id, titulo, concluido FROM tarefa";
-        try (Connection conn = Conexao.getConexao().conectar();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        List<Tarefa> tarefas = new ArrayList<>();
+
+        try (Connection conn = Conexao.getConexao();
+             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                tarefas.add(TarrefaBuilder.builder()
+                tarefas.add(TarefaBuilder.builder()
                         .id(resultSet.getInt("id"))
                         .titulo(resultSet.getString("titulo"))
                         .concluido(resultSet.getBoolean("concluido"))
@@ -51,7 +53,8 @@ public class TarefaDao implements DAO<Tarefa> {
     @Override
     public void editar(int id, Tarefa t) throws DaoException {
         String sql = "UPDATE tarefa SET titulo = ?, concluido = ? WHERE id = ?";
-        try (Connection conn = Conexao.getConexao().conectar();
+
+        try (Connection conn = Conexao.getConexao();
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, t.getTitulo());
             preparedStatement.setBoolean(2, t.isConcluido());
@@ -66,7 +69,8 @@ public class TarefaDao implements DAO<Tarefa> {
     @Override
     public void remover(int id) throws DaoException {
         String sql = "DELETE FROM tarefa WHERE id = ?";
-        try (Connection conn = Conexao.getConexao().conectar();
+
+        try (Connection conn = Conexao.getConexao();
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
