@@ -1,14 +1,12 @@
 package com.gusto.todo.view;
 
 import com.gusto.todo.model.Tarefa;
-
-import javax.swing.table.AbstractTableModel;
 import java.util.List;
+import javax.swing.table.AbstractTableModel;
 
 public class TarefaTableModel extends AbstractTableModel {
 
     private static final long serialVersionUID = 1L;
-
     private final String[] colunas = {"Tarefa", "Concluído"};
 
     private final transient List<Tarefa> dados;
@@ -29,13 +27,15 @@ public class TarefaTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int linha, int coluna) {
-        return coluna == 0 ? dados.get(linha).getTitulo()
+        return coluna == 0
+                ? dados.get(linha).getTitulo()
                 : dados.get(linha).isConcluido();
     }
 
     @Override
     public Class<?> getColumnClass(int coluna) {
-        return coluna == 0 ? String.class
+        return coluna == 0
+                ? String.class
                 : Boolean.class;
     }
 
@@ -64,27 +64,27 @@ public class TarefaTableModel extends AbstractTableModel {
         fireTableCellUpdated(linha, coluna);
     }
 
-    public Tarefa getValue(int linha) {
+    public Tarefa getValueRow(int linha) {
         return dados.get(linha);
     }
 
-    public int indexOf(Tarefa tarefa) {
+    public int getLineOf(Tarefa tarefa) {
         return dados.indexOf(tarefa);
     }
 
-    public void onAdd(Tarefa tarefa) {
+    public void add(Tarefa tarefa) {
         dados.add(tarefa);
-        fireTableRowsInserted(indexOf(tarefa), indexOf(tarefa));
+        fireTableRowsInserted(getLineOf(tarefa), getLineOf(tarefa));
     }
 
-    public void onRemove(int linha) {
+    public void remove(int linha) {
         dados.remove(linha);
         fireTableRowsDeleted(linha, linha);
     }
 
-    public void onUpdate(Tarefa tarefa) {
-        dados.add(tarefa);
-        fireTableRowsUpdated(indexOf(tarefa), indexOf(tarefa));
+    public void update(Tarefa tarefa) {
+        dados.add(tarefa.getId(), tarefa);
+        fireTableRowsUpdated(getLineOf(tarefa), getLineOf(tarefa));
     }
 
 }

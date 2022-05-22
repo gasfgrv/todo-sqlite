@@ -2,7 +2,6 @@ package com.gusto.todo.controller;
 
 import com.gusto.todo.exception.ControllerException;
 import com.gusto.todo.model.Tarefa;
-
 import java.util.List;
 
 public interface Controller<T, I> {

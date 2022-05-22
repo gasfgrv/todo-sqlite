@@ -1,7 +1,6 @@
 package com.gusto.todo.dao;
 
 import com.gusto.todo.exception.DaoException;
-
 import java.util.List;
 
 public interface DAO<T> {

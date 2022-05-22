@@ -5,12 +5,12 @@ import com.gusto.todo.controller.TarefaController;
 import com.gusto.todo.dao.DAO;
 import com.gusto.todo.dao.TarefaDao;
 import com.gusto.todo.model.Tarefa;
+import com.gusto.todo.view.TarefaTableModel;
 import com.gusto.todo.view.TarefaView;
-
+import java.awt.EventQueue;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import java.awt.EventQueue;
 
 public class TodoSqlite {
 
@@ -27,7 +27,7 @@ public class TodoSqlite {
             } finally {
                 DAO<Tarefa> dao = new TarefaDao();
                 Controller<Tarefa, Integer> controller = new TarefaController(dao);
-                TarefaView frame = new TarefaView(controller);
+                TarefaView frame = new TarefaView(new TarefaTableModel(controller.listar()), controller);
                 frame.iniciar();
             }
         });

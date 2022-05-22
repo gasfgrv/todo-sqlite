@@ -1,13 +1,13 @@
 package com.gusto.todo.connection;
 
-import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 
-public class Conexao implements AutoCloseable{
+public class Conexao implements AutoCloseable {
 
     public static final String URL = "jdbc:sqlite::resource:database/tarefas.db";
 
@@ -28,12 +28,12 @@ public class Conexao implements AutoCloseable{
     }
 
     public static Connection getConexao() throws SQLException {
-        return checkConnection()
+        return checarConexao()
                 ? novaConexao()
                 : connection;
     }
 
-    private static boolean checkConnection() throws SQLException {
+    private static boolean checarConexao() throws SQLException {
         return connection == null || connection.isClosed();
     }
 

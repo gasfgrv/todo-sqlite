@@ -4,7 +4,6 @@ import com.gusto.todo.connection.Conexao;
 import com.gusto.todo.exception.DaoException;
 import com.gusto.todo.model.Tarefa;
 import com.gusto.todo.model.TarefaBuilder;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,20 +31,25 @@ public class TarefaDao implements DAO<Tarefa> {
     @Override
     public List<Tarefa> listar() throws DaoException {
         String sql = "SELECT id, titulo, concluido FROM tarefa";
-        List<Tarefa> tarefas = new ArrayList<>();
 
         try (Connection conn = Conexao.getConexao();
              PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                tarefas.add(TarefaBuilder.builder()
-                        .id(resultSet.getInt("id"))
-                        .titulo(resultSet.getString("titulo"))
-                        .concluido(resultSet.getBoolean("concluido"))
-                        .build());
-            }
+            return adicionarTarefas(resultSet);
         } catch (SQLException e) {
             throw new DaoException(e);
+        }
+    }
+
+    private List<Tarefa> adicionarTarefas(ResultSet resultSet) throws SQLException {
+        List<Tarefa> tarefas = new ArrayList<>();
+
+        while (resultSet.next()) {
+            tarefas.add(TarefaBuilder.builder()
+                    .id(resultSet.getInt("id"))
+                    .titulo(resultSet.getString("titulo"))
+                    .concluido(resultSet.getBoolean("concluido"))
+                    .build());
         }
 
         return tarefas;

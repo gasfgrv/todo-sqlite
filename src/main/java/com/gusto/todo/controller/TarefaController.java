@@ -4,8 +4,6 @@ import com.gusto.todo.dao.DAO;
 import com.gusto.todo.exception.ControllerException;
 import com.gusto.todo.exception.DaoException;
 import com.gusto.todo.model.Tarefa;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class TarefaController implements Controller<Tarefa, Integer> {
@@ -27,15 +25,11 @@ public class TarefaController implements Controller<Tarefa, Integer> {
 
     @Override
     public List<Tarefa> listar() throws ControllerException {
-        List<Tarefa> tarefas = new ArrayList<>();
-
         try {
-            tarefas = dao.listar();
+            return dao.listar();
         } catch (DaoException e) {
             throw new ControllerException(e);
         }
-
-        return tarefas;
     }
 
     @Override
